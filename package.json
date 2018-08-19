@@ -93,8 +93,5 @@
     "exclude": [
       "**/*.spec.js"
     ]
-  },
-  "peerDependencies": {
-    "@microgamma/apigator": ">=1.5.1"
   }
 }
