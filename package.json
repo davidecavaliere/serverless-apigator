@@ -1,5 +1,5 @@
 {
-  "name": "serverless-apigator",
+  "name": "@microgamma/serverless-apigator",
   "version": "1.0.0",
   "description": "a typescript-starter project",
   "main": "build/main/index.js",
@@ -52,7 +52,9 @@
     "node": ">=8.9"
   },
   "dependencies": {
-    "sha.js": "^2.4.11"
+    "@microgamma/apigator": "^1.5.1",
+    "@microgamma/ts-debug": "^0.3.1",
+    "reflect-metadata": "^0.1.12"
   },
   "devDependencies": {
     "ava": "^1.0.0-beta.5.1",
@@ -92,5 +94,8 @@
     "exclude": [
       "**/*.spec.js"
     ]
+  },
+  "peerDependencies": {
+    "@microgamma/apigator": ">=1.5.1"
   }
 }
