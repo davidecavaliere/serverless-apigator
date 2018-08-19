@@ -1,0 +1,22 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - echo installing packages
+      - npm install
+  pre_build:
+    commands:
+      - echo running prebuild
+  build:
+    commands:
+      - echo Build started on `date`
+      - echo Compiling the source code
+      - npm run build
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - echo listing directory
+      - ls -al
+      - echo Publishing to npm
+      - npm publish
