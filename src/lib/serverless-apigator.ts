@@ -9,27 +9,24 @@ export class Serverless {
   public hooks: any = {};
 
   private servicePath: string;
-  private artifactsPath: string;
   private entrypoint: string;
-  private apiFolder: string;
-
-
-
+  private serviceName;
 
   constructor(private serverless: any, private options: any) {
 
-    serverless.cli.log('-------------------------------------');
-    serverless.cli.log('Parsing Service definitions');
+    this.options = options;
+
+    serverless.cli.log('Parsing Apigator Service definitions');
     this.servicePath = serverless.config.servicePath;
     debug('servicePath:', this.servicePath);
 
     const awsService = serverless.service.service;
+    this.serviceName = awsService;
     debug('awsService name', awsService);
+    debug('stage', this.options.stage);
 
     const services = serverless.service.custom.services;
     debug('pre defined services', services);
-    this.artifactsPath = serverless.service.custom.artifactsFolder;
-    this.apiFolder = serverless.service.custom.apiFolder;
     this.entrypoint = serverless.service.custom.entrypoint;
     debug('entrypoint', this.entrypoint);
 
@@ -71,6 +68,7 @@ export class Serverless {
         const functionName = endpoint.name;
 
         this.serverless.service.functions[endpoint.name] = {
+          name: ` ${this.serviceName}-${this.options.stage || ''}-${functionName}`,
           handler: `${this.entrypoint}.${functionName}`,
           events: [
             {
