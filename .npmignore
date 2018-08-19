@@ -4,9 +4,9 @@ tsconfig.json
 tsconfig.module.json
 tslint.json
 .travis.yml
+buildspec.yml
 .github
 .prettierignore
-.vscode
 build/docs
 **/*.spec.*
 coverage
