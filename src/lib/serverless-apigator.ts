@@ -68,7 +68,7 @@ export class Serverless {
         const functionName = endpoint.name;
 
         this.serverless.service.functions[endpoint.name] = {
-          name: ` ${this.serviceName}-${this.options.stage || ''}-${functionName}`,
+          name: `${this.serviceName}-${this.options.stage || ''}-${functionName}`,
           handler: `${this.entrypoint}.${functionName}`,
           events: [
             {
