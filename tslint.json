@@ -6,6 +6,7 @@
     // waiting on https://github.com/palantir/tslint/pull/3708
     "no-implicit-dependencies": [true, "dev"],
     "ordered-imports": false,
-    "no-console": false
+    "no-console": false,
+    "object-literal-sort-keys": false
   }
 }
