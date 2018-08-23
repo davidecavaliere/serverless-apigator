@@ -1,4 +1,4 @@
-import { getServiceMetadata, getEndpointMetadata} from '@microgamma/apigator';
+import { getEndpointMetadata, getLambdaMetadata} from '@microgamma/apigator';
 import { getDebugger } from '@microgamma/ts-debug';
 
 
@@ -58,10 +58,10 @@ export class Serverless {
 
       debug('metadata', Reflect.getMetadataKeys(service));
       debug('metadata', Reflect.getMetadata('Endpoint', service));
-      debug('Service', getServiceMetadata(service));
-      debug('Endpoints', getEndpointMetadata(service));
+      debug('Service', getEndpointMetadata(service));
+      debug('Endpoints', getLambdaMetadata(service));
 
-      const endpoints = getEndpointMetadata(service);
+      const endpoints = getLambdaMetadata(service);
 
       for (const endpoint of endpoints) {
         debug('configuring endpoint', endpoint);
