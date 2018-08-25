@@ -1,22 +1,31 @@
-import { getEndpointMetadata, getLambdaMetadata} from '@microgamma/apigator';
+import { getEndpointMetadata, getLambdaMetadata, EndpointOptions, LambdaOptions } from '@microgamma/apigator';
 import { getDebugger } from '@microgamma/ts-debug';
 
 
 const debug = getDebugger('microgamma:serveless-apigator');
 
-export class Serverless {
+export class ServerlessApigator {
 
-  public hooks: any = {};
+  public hooks: any = {
+    'before:package:initialize': () => {
+      debug('before:package:initialize');
+      return this.configureFunctions();
+    },
+
+    'before:invoke:local:invoke': () => {
+      debug('before:invoke:local:invoke');
+      return this.configureFunctions();
+    }
+  };
 
   private servicePath: string;
   private entrypoint: string;
-  private serviceName;
+  private serviceName: string;
 
-  constructor(private serverless: any, private options: any) {
+  constructor(private serverless: any, private options: any = {}) {
 
     this.options = options;
 
-    serverless.cli.log('Parsing Apigator Service definitions');
     this.servicePath = serverless.config.servicePath;
     debug('servicePath:', this.servicePath);
 
@@ -25,72 +34,75 @@ export class Serverless {
     debug('awsService name', awsService);
     debug('stage', this.options.stage);
 
-    const services = serverless.service.custom.services;
-    debug('pre defined services', services);
+    if (!serverless.service.custom.entrypoint) {
+      throw new Error('you shall provide path to your entrypoint');
+    }
+
     this.entrypoint = serverless.service.custom.entrypoint;
     debug('entrypoint', this.entrypoint);
 
-    this.hooks = {
-      'before:package:initialize': () => {
-        debug('before:package:initialize');
-        return this.configureFunctions();
-      },
-
-      'before:invoke:local:invoke': () => {
-        debug('before:invoke:local:invoke');
-        return this.configureFunctions();
-      }
-    };
   }
 
-  public configureFunctions() {
+  public async configureFunctions() {
 
     debug('importing module');
 
-    // const module = require(`${this.servicePath}/${this.entrypoint}`);
     const modulePath = `${this.servicePath}/${this.entrypoint}`;
-    return import(modulePath).then((module) => {
 
-      this.serverless.cli.log('Injecting configuration');
-      debug('works', module);
+    const module = await this.importModule(modulePath);
 
-      const service = module.default;
+    this.serverless.cli.log('Injecting configuration');
+    debug('works', module);
 
-      debug('metadata', Reflect.getMetadataKeys(service));
-      debug('metadata', Reflect.getMetadata('Endpoint', service));
-      debug('Service', getEndpointMetadata(service));
-      debug('Endpoints', getLambdaMetadata(service));
+    const endpoint = module.default;
 
-      const endpoints = getLambdaMetadata(service);
+    debug('Endpoints', getLambdaMetadata(endpoint));
 
-      for (const endpoint of endpoints) {
-        debug('configuring endpoint', endpoint);
-        const functionName = endpoint.name;
+    const endpointMetadata: EndpointOptions = getEndpointMetadata(endpoint);
+    debug('Endpoint', endpointMetadata);
 
-        this.serverless.service.functions[endpoint.name] = {
-          name: `${this.serviceName}-${this.options.stage || ''}-${functionName}`,
-          handler: `${this.entrypoint}.${functionName}`,
-          events: [
-            {
-              http:  {
-                path: endpoint.path,
-                method: endpoint.method,
-                integration: 'lambda',
-                cors: true
-              }
-            }
-          ]
-        };
+    const lambdas = getLambdaMetadata(endpoint);
 
-        debug('functions is');
-        debug(this.serverless.service.functions[endpoint.name]);
-        debug(this.serverless.service.functions[endpoint.name].events);
-      }
+    this.serverless.cli.log('Parsing Apigator Service definitions');
 
-      this.serverless.cli.log(`${endpoints.length} endpoints configured`);
+    for (const lambda of lambdas) {
+      debug('configuring lambda', lambda);
 
-    }).catch((err) => {
-      console.error(err);
-    });
+      this.addFunctionToService(endpointMetadata, lambda);
+
+      debug('functions are');
+      debug(this.serverless.service.functions[lambda.name]);
+      debug(this.serverless.service.functions[lambda.name].events);
+    }
+
+    this.serverless.cli.log(`${lambdas.length} functions configured`);
   }
+
+
+  public async importModule(path: string) {
+    return import(path);
+  }
+
+  public addFunctionToService(endpoint: EndpointOptions, lambda: LambdaOptions) {
+    const functionName = lambda.name;
+
+    const basePath = endpoint.basePath || '';
+
+    this.serverless.service.functions[lambda.name] = {
+      name: `${this.serviceName}-${this.options.stage || ''}-${functionName}`,
+      handler: `${this.entrypoint}.${functionName}`,
+      events: [
+        {
+          http:  {
+            path: basePath + lambda.path,
+            method: lambda.method,
+            integration: 'lambda',
+            cors: true
+          }
+        }
+      ]
+    };
+
+  }
+
 }

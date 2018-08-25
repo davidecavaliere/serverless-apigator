@@ -1,4 +1,4 @@
-import { Serverless } from './lib/serverless-apigator';
+import { ServerlessApigator } from './lib/serverless-apigator';
 
 
-export = Serverless;
+export = ServerlessApigator;

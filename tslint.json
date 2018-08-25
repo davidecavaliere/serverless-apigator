@@ -7,6 +7,7 @@
     "no-implicit-dependencies": [true, "dev"],
     "ordered-imports": false,
     "no-console": false,
-    "object-literal-sort-keys": false
+    "object-literal-sort-keys": false,
+    "member-ordering": false
   }
 }
