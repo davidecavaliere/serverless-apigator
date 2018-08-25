@@ -20,3 +20,4 @@ phases:
       - ls -al
       - echo Publishing to npm
       - npm publish
+      - npm run cov:send
