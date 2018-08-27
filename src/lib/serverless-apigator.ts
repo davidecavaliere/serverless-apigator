@@ -15,6 +15,12 @@ export class ServerlessApigator {
     'before:invoke:local:invoke': () => {
       debug('before:invoke:local:invoke');
       return this.configureFunctions();
+    },
+
+    // adding hook to make it work with serverless-offline plugin
+    'offline:start:init': () => {
+      debug('offline:init');
+      return this.configureFunctions();
     }
   };
 
