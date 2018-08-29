@@ -103,7 +103,8 @@ export class ServerlessApigator {
             path: basePath + lambda.path,
             method: lambda.method,
             integration: 'lambda',
-            cors: true
+            cors: !!lambda.cors,
+            private: !!lambda.private
           }
         }
       ]
