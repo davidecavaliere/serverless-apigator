@@ -94,6 +94,9 @@ export class ServerlessApigator {
 
     const basePath = endpoint.basePath || '';
 
+    const corsOption = lambda.hasOwnProperty('cors') ? !!lambda.cors : !!endpoint.cors;
+    const privateLambda = lambda.hasOwnProperty('private') ? !!lambda.private: !!endpoint.private;
+
     this.serverless.service.functions[lambda.name] = {
       name: `${this.serviceName}-${this.options.stage || ''}-${functionName}`,
       handler: `${this.entrypoint}.${functionName}`,
@@ -103,8 +106,8 @@ export class ServerlessApigator {
             path: basePath + lambda.path,
             method: lambda.method,
             integration: 'lambda',
-            cors: !!lambda.cors,
-            private: !!lambda.private
+            cors: corsOption,
+            private: privateLambda
           }
         }
       ]
