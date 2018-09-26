@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.3.0"></a>
+# [1.3.0](https://github.com/davidecavaliere/serverless-apigator/compare/v1.2.11...v1.3.0) (2018-09-26)
+
+
+### Features
+
+* adding support for authorizer function ([b13dee9](https://github.com/davidecavaliere/serverless-apigator/commit/b13dee9))
+
+
+
 <a name="1.2.11"></a>
 ## [1.2.11](https://github.com/davidecavaliere/serverless-apigator/compare/v1.2.9...v1.2.11) (2018-09-01)
 
