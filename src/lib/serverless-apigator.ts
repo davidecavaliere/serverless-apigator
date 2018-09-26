@@ -94,11 +94,13 @@ export class ServerlessApigator {
 
     const basePath = endpoint.basePath || '';
 
+    const fullFunctionName = `${this.serviceName}-${this.options.stage || ''}-${functionName}`;
     const corsOption = lambda.hasOwnProperty('cors') ? !!lambda.cors : !!endpoint.cors;
     const privateLambda = lambda.hasOwnProperty('private') ? !!lambda.private: !!endpoint.private;
+    const authorizerName = lambda.hasOwnProperty('authorizer') ? lambda.authorizer : null;
 
     this.serverless.service.functions[lambda.name] = {
-      name: `${this.serviceName}-${this.options.stage || ''}-${functionName}`,
+      name: fullFunctionName,
       handler: `${this.entrypoint}.${functionName}`,
       events: [
         {
@@ -112,6 +114,10 @@ export class ServerlessApigator {
         }
       ]
     };
+
+    if (authorizerName) {
+      this.serverless.service.functions[lambda.name].events.http['authorizer'] = authorizerName;
+    }
 
   }
 
