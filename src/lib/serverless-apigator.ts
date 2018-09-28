@@ -1,4 +1,4 @@
-import { getEndpointMetadata, getLambdaMetadata, EndpointOptions, LambdaOptions } from '@microgamma/apigator';
+import { getAuthorizerMetadata, getEndpointMetadata, getLambdaMetadata, EndpointOptions, LambdaOptions } from '@microgamma/apigator';
 import { getDebugger } from '@microgamma/ts-debug';
 
 
@@ -69,7 +69,12 @@ export class ServerlessApigator {
 
     const lambdas = getLambdaMetadata(endpoint);
 
+    const authorizerFn = getAuthorizerMetadata(endpoint);
+    debug('auth function found', authorizerFn);
+
     this.serverless.cli.log('Parsing Apigator Service definitions');
+
+    this.addFunctionToService(endpointMetadata, authorizerFn);
 
     for (const lambda of lambdas) {
       debug('configuring lambda', lambda);
@@ -95,29 +100,54 @@ export class ServerlessApigator {
     const basePath = endpoint.basePath || '';
 
     const fullFunctionName = `${this.serviceName}-${this.options.stage || ''}-${functionName}`;
-    const corsOption = lambda.hasOwnProperty('cors') ? !!lambda.cors : !!endpoint.cors;
-    const privateLambda = lambda.hasOwnProperty('private') ? !!lambda.private: !!endpoint.private;
-    const authorizerName = lambda.hasOwnProperty('authorizer') ? lambda.authorizer : null;
 
-    this.serverless.service.functions[lambda.name] = {
-      name: fullFunctionName,
-      handler: `${this.entrypoint}.${functionName}`,
-      events: [
-        {
-          http:  {
-            path: basePath + lambda.path,
-            method: lambda.method,
-            integration: 'lambda',
-            cors: corsOption,
-            private: privateLambda
-          }
-        }
-      ]
+    // cors true by default
+    let corsOption = true;
+
+    if (lambda.hasOwnProperty('cors')) {
+      corsOption = lambda.cors;
+    } else if (endpoint.hasOwnProperty('cors')) {
+      corsOption = endpoint.cors;
+    }
+
+    const privateLambda = lambda.hasOwnProperty('private') ? !!lambda.private: !!endpoint.private;
+
+    const path = basePath + lambda.path;
+    const method = lambda.method;
+    const authorizer = lambda.hasOwnProperty('authorizer') ? lambda.authorizer : null;
+
+    const httpEvent: LambdaOptions & { integration: string } = {
+      integration: 'lambda',
+      cors: corsOption,
+      private: privateLambda
     };
 
-    if (authorizerName) {
-      this.serverless.service.functions[lambda.name].events.http['authorizer'] = authorizerName;
+    if (lambda.path) {
+      httpEvent.path = path;
     }
+
+    if (method) {
+      httpEvent.method = method;
+    }
+
+    if (authorizer) {
+      httpEvent.authorizer = authorizer;
+    }
+
+    const lambdaDef = {
+      name: fullFunctionName,
+      handler: `${this.entrypoint}.${functionName}`
+    };
+
+    if (lambda.path) {
+      lambdaDef['events'] = [{
+        http:  httpEvent
+      }]
+    }
+
+    this.serverless.service.functions[lambda.name] = lambdaDef;
+
+    debug('function configured', this.serverless.service.functions[lambda.name]);
 
   }
 

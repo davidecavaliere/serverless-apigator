@@ -2,9 +2,8 @@
 
 import test from 'ava';
 import { ServerlessApigator } from './serverless-apigator';
-import { boostrap, Endpoint, EndpointOptions, Lambda, LambdaOptions } from '@microgamma/apigator';
+import { Authorizer, boostrap, Endpoint, EndpointOptions, Lambda, LambdaOptions } from '@microgamma/apigator';
 import * as Sinon from 'sinon';
-import { getDebugger } from '@microgamma/ts-debug';
 
 const d = console.log;
 
@@ -44,6 +43,18 @@ class TestClass {
   @Lambda(option1)
   public findAll(arg1, arg2, arg3) {
     return arg1 + arg2 + arg3;
+  }
+
+  @Lambda({
+    name: 'name'
+  })
+  public functionA(arg1, arg2, arg3) {
+    return arg1 + arg2 + arg3;
+  }
+
+  @Authorizer()
+  public authorizer() {
+    return true;
   }
 
 }
@@ -94,7 +105,8 @@ test('#addFunctionToService', (t) => {
         path: 'root/:id',
         method: 'get',
         integration: 'lambda',
-        cors: true
+        cors: true,
+        private: false
       }
     }]
   });
@@ -113,7 +125,8 @@ test('#configureFunctions', (t) => {
           path: '/',
           method: 'get',
           integration: 'lambda',
-          cors: true
+          cors: true,
+          private: false
         }
       }]
     })
@@ -123,5 +136,32 @@ test('#configureFunctions', (t) => {
   });
 });
 
+test('function with only name should not have any event configured', (t) => {
+  t.plan(1);
+  return plugin.configureFunctions().then(() => {
+
+    t.deepEqual(serverless.service.functions['name'], {
+      name: 'my-service-test-name',
+      handler: 'my-entrypoint.name'
+    })
+
+  }).catch((err) => {
+    console.log(err);
+  });
+});
+
+test('authorizer function should be configured', (t) => {
+  t.plan(1);
+  return plugin.configureFunctions().then(() => {
+
+    t.deepEqual(serverless.service.functions['authorizer'], {
+      name: 'my-service-test-authorizer',
+      handler: 'my-entrypoint.authorizer'
+    })
+
+  }).catch((err) => {
+    console.log(err);
+  });
+});
 
 // test('')
