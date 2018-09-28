@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.4.2"></a>
+## [1.4.2](https://github.com/davidecavaliere/serverless-apigator/compare/v1.4.0...v1.4.2) (2018-09-28)
+
+
+
 <a name="1.4.0"></a>
 # [1.4.0](https://github.com/davidecavaliere/serverless-apigator/compare/v1.3.2...v1.4.0) (2018-09-28)
 
