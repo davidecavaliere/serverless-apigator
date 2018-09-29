@@ -21,6 +21,12 @@ export class ServerlessApigator {
     'offline:start:init': () => {
       debug('offline:init');
       return this.configureFunctions();
+    },
+
+    // adding hook to fix aws:info:display
+    'before:info:info': () => {
+      debug('offline:init');
+      return this.configureFunctions();
     }
   };
 
