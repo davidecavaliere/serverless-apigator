@@ -136,13 +136,14 @@ test('#configureFunctions', (t) => {
   });
 });
 
-test('function with only name should not have any event configured', (t) => {
+test('function with only name should have empty event array', (t) => {
   t.plan(1);
   return plugin.configureFunctions().then(() => {
 
     t.deepEqual(serverless.service.functions['name'], {
       name: 'my-service-test-name',
-      handler: 'my-entrypoint.name'
+      handler: 'my-entrypoint.name',
+      events: []
     })
 
   }).catch((err) => {
@@ -156,8 +157,9 @@ test('authorizer function should be configured', (t) => {
 
     t.deepEqual(serverless.service.functions['authorizer'], {
       name: 'my-service-test-authorizer',
-      handler: 'my-entrypoint.authorizer'
-    })
+      handler: 'my-entrypoint.authorizer',
+      events: []
+    });
 
   }).catch((err) => {
     console.log(err);

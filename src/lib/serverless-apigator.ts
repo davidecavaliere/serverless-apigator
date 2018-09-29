@@ -149,6 +149,8 @@ export class ServerlessApigator {
       lambdaDef['events'] = [{
         http:  httpEvent
       }]
+    } else {
+      lambdaDef['events'] = [];
     }
 
     this.serverless.service.functions[lambda.name] = lambdaDef;
