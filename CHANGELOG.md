@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.4.4"></a>
+## [1.4.4](https://github.com/davidecavaliere/serverless-apigator/compare/v1.4.2...v1.4.4) (2018-09-29)
+
+
+### Bug Fixes
+
+* adding hook on before info ([abcb10a](https://github.com/davidecavaliere/serverless-apigator/commit/abcb10a))
+* function without event should still have an empty array ([0dc337e](https://github.com/davidecavaliere/serverless-apigator/commit/0dc337e))
+
+
+
 <a name="1.4.2"></a>
 ## [1.4.2](https://github.com/davidecavaliere/serverless-apigator/compare/v1.4.0...v1.4.2) (2018-09-28)
 
