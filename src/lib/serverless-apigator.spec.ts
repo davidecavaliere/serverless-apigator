@@ -2,7 +2,7 @@
 
 import test from 'ava';
 import { ServerlessApigator } from './serverless-apigator';
-import { Authorizer, boostrap, Endpoint, EndpointOptions, Lambda, LambdaOptions } from '@microgamma/apigator';
+import { Authorizer, bootstrap, Endpoint, EndpointOptions, Lambda, LambdaOptions } from '@microgamma/apigator';
 import * as Sinon from 'sinon';
 
 const d = console.log;
@@ -61,7 +61,7 @@ class TestClass {
 
 
 test.beforeEach((t) => {
-  myModule = boostrap(TestClass, '');
+  myModule = bootstrap(TestClass);
 
   plugin = new ServerlessApigator(serverless, { stage: 'test' });
 
