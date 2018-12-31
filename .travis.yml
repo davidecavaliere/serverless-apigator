@@ -1,12 +1,18 @@
-sudo: false
 language: node_js
 node_js:
-  - 8
-  - 9
-# keep the npm cache to speed up installs
-cache:
-  directories:
-  - "$HOME/.npm"
-after_success:
-  - npx nyc report --reporter=lcov | npx codecov
-  - npm run cov:check
+- '8'
+script:
+- yarn test
+- yarn build
+- npm publish
+#- yarn sls deploy --stage dev
+after_script:
+#  - 'cat coverage/lcov.info | npx coveralls' # sends the coverage report to coveralls
+- yarn cov:send
+#deploy:
+#  provider: npm
+#  email: cavaliere.davide@gmail.com
+#  api_key: $NPM_TOKEN
+#  on:
+#    tags: true
+
