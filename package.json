@@ -53,7 +53,6 @@
     "node": ">=8.9"
   },
   "dependencies": {
-    "@microgamma/apigator": "^1.9.11",
     "@microgamma/ts-debug": "^0.3.1",
     "reflect-metadata": "^0.1.12"
   },
@@ -100,6 +99,7 @@
     ]
   },
   "peerDependencies": {
+    "@microgamma/apigator": "1.9.*",
     "serverless": "^1.30.1"
   }
 }
