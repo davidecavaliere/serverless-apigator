@@ -40,9 +40,6 @@
     "typeRoots": ["node_modules/@types", "src/types"]
   },
   "include": ["src/**/*.ts"],
-  "exclude": [
-    "node_modules/**",
-    "src/**/*.spec.ts"
-  ],
+  "exclude": ["node_modules/**"],
   "compileOnSave": false
 }
