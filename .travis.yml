@@ -1,18 +1,18 @@
 language: node_js
 node_js:
-  - '8'
+- '8'
 script:
-  - yarn test
-  - yarn build
+- yarn test
+- yarn build
 after_script:
-  - yarn cov:send
+- yarn cov:send
 
 deploy:
   provider: npm
   email: cavaliere.davide@gmail.com
-  api_key: $NPM_TOKEN
+  api_key: ${NPM_TOKEN}
   on:
     tags: true
-  tag: next
+    all_branches: true
   skip_cleanup: true
 
