@@ -9,7 +9,8 @@ export class ServerlessApigator {
   public hooks: any = {
     'before:package:initialize': () => {
       debug('before:package:initialize');
-      return this.configureFunctions();
+
+      return this.configureFunctions(true);
     },
 
     'before:invoke:local:invoke': () => {
@@ -55,7 +56,7 @@ export class ServerlessApigator {
 
   }
 
-  public async configureFunctions() {
+  public async configureFunctions(forDeployment = false) {
 
     debug('importing module');
 
@@ -82,14 +83,14 @@ export class ServerlessApigator {
     if (authorizerFn) {
       debug('auth function found', authorizerFn);
       this.serverless.cli.log('Setting up custom authorizer');
-      this.addFunctionToService(endpointMetadata, authorizerFn);
+      this.addFunctionToService(endpointMetadata, authorizerFn, forDeployment);
 
     }
 
     for (const lambda of lambdas) {
       debug('configuring lambda', lambda);
 
-      this.addFunctionToService(endpointMetadata, lambda);
+      this.addFunctionToService(endpointMetadata, lambda, forDeployment);
 
       debug('functions are');
       debug(this.serverless.service.functions[lambda.name]);
@@ -104,7 +105,7 @@ export class ServerlessApigator {
     return import(path);
   }
 
-  public addFunctionToService(endpoint: EndpointOptions, lambda: LambdaOptions) {
+  public addFunctionToService(endpoint: EndpointOptions, lambda: LambdaOptions, forDeployment = false) {
     const functionName = lambda.name;
 
     const basePath = endpoint.basePath || '';
@@ -122,6 +123,7 @@ export class ServerlessApigator {
 
     const privateLambda = lambda.hasOwnProperty('private') ? !!lambda.private: !!endpoint.private;
 
+    let entrypoint = this.entrypoint;
     const path = basePath + lambda.path;
     const method = lambda.method;
     const authorizer = lambda.hasOwnProperty('authorizer') ? lambda.authorizer : null;
@@ -144,9 +146,16 @@ export class ServerlessApigator {
       httpEvent.authorizer = authorizer;
     }
 
+    if (forDeployment) {
+
+      entrypoint = entrypoint.split('/').filter((pathPart) => {
+        return pathPart !== '..';
+      }).join('/');
+    }
+
     const lambdaDef = {
       name: fullFunctionName,
-      handler: `${this.entrypoint}.${functionName}`
+      handler: `${entrypoint}.${functionName}`
     };
 
     if (lambda.path) {
