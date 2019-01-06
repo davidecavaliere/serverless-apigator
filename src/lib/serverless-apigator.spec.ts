@@ -66,7 +66,7 @@ test.beforeEach((t) => {
   plugin = new ServerlessApigator(serverless, { stage: 'test' });
 
   Sinon.stub(plugin, 'importModule').callsFake(async () => {
-    return { default: myModule };
+    return { default: TestClass };
 
   });
 });
@@ -165,5 +165,3 @@ test('authorizer function should be configured', (t) => {
     console.log(err);
   });
 });
-
-// test('')

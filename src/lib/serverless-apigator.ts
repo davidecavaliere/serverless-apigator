@@ -1,4 +1,10 @@
-import { getAuthorizerMetadata, getEndpointMetadata, getLambdaMetadata, EndpointOptions, LambdaOptions } from '@microgamma/apigator';
+import {
+  EndpointOptions,
+  getAuthorizerMetadataFromClass,
+  getEndpointMetadataFromClass,
+  getLambdaMetadataFromClass,
+  LambdaOptions
+} from '@microgamma/apigator';
 import { getDebugger } from '@microgamma/ts-debug';
 
 
@@ -34,13 +40,22 @@ export class ServerlessApigator {
   private servicePath: string;
   private entrypoint: string;
   private serviceName: string;
+  private buildFolder: string;
+  private serviceDef: string;
 
   constructor(private serverless: any, private options: any = {}) {
 
     this.options = options;
+    const customOptions = serverless.service.custom;
 
     this.servicePath = serverless.config.servicePath;
     debug('servicePath:', this.servicePath);
+
+    this.buildFolder = customOptions.buildFolder;
+    debug('build folder', this.buildFolder);
+
+    this.serviceDef = customOptions.service;
+    debug('service def', this.serviceDef);
 
     const awsService = serverless.service.service;
     this.serviceName = awsService;
@@ -57,10 +72,11 @@ export class ServerlessApigator {
   }
 
   public async configureFunctions(forDeployment = false) {
+    const modulePath = `${this.buildFolder}`;
+    // `${this.servicePath}/${this.entrypoint}`;
 
-    debug('importing module');
+    debug('importing service definition from', modulePath);
 
-    const modulePath = `${this.servicePath}/${this.entrypoint}`;
 
     const module = await this.importModule(modulePath);
 
@@ -69,14 +85,14 @@ export class ServerlessApigator {
 
     const endpoint = module.default;
 
-    debug('Endpoints', getLambdaMetadata(endpoint));
 
-    const endpointMetadata: EndpointOptions = getEndpointMetadata(endpoint);
+    const endpointMetadata: EndpointOptions = getEndpointMetadataFromClass(endpoint);
     debug('Endpoint', endpointMetadata);
 
-    const lambdas = getLambdaMetadata(endpoint);
+    const lambdas = getLambdaMetadataFromClass(endpoint);
+    debug('Lambdas', lambdas);
 
-    const authorizerFn = getAuthorizerMetadata(endpoint);
+    const authorizerFn = getAuthorizerMetadataFromClass(endpoint);
 
     this.serverless.cli.log('Parsing Apigator Service definitions');
 
