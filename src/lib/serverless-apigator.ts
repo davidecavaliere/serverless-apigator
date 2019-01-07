@@ -50,7 +50,7 @@ export class ServerlessApigator {
       // original servicePath
 
       debug('moving back .serverless folder');
-      fs.renameSync(this.serverless.service.custom.npmModulePath + './serverless', this.servicePath + '.serverless');
+      fs.renameSync(this.serverless.service.custom.npmModulePath + '/.serverless', this.servicePath + '/.serverless');
 
       this.serverless.config.servicePath = this.servicePath;
       debug('servicePath set to', this.serverless.config.servicePath);
