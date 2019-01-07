@@ -38,11 +38,20 @@ export class ServerlessApigator {
 
     'before:package:createDeploymentArtifacts': () => {
       debug('this runs before packaging');
-      this.serverless.config.servicePath = this.options.npmModulePath;
+      this.serverless.config.servicePath = this.serverless.service.custom.npmModulePath;
+      debug('servicePath set to', this.serverless.config.servicePath);
     },
     'after:package:createDeploymentArtifacts': () => {
       debug('this runs after packaging');
       this.serverless.config.servicePath = this.servicePath;
+      debug('servicePath set to', this.serverless.config.servicePath);
+
+    },
+
+    'after:package:finalize': () => {
+      debug('this runs after package:finalize');
+      debug('servicePath set to', this.serverless.config.servicePath);
+
     }
   };
 
