@@ -7,7 +7,7 @@ import {
 } from '@microgamma/apigator';
 import { getDebugger } from '@microgamma/ts-debug';
 
-import fs = require('fs');
+import fs = require('fs-extra');
 
 
 const debug = getDebugger('microgamma:serveless-apigator');
@@ -49,13 +49,12 @@ export class ServerlessApigator {
       // now zip package has been created in npmModulePath. need to move it to
       // original servicePath
 
-      debug('moving back .serverless folder');
-      fs.renameSync(this.serverless.service.custom.npmModulePath + '/.serverless', this.servicePath + '/.serverless');
 
       this.serverless.config.servicePath = this.servicePath;
       debug('servicePath set to', this.serverless.config.servicePath);
       debug('package path', this.serverless.service.package.path);
 
+      return this.copyPackages();
     },
 
     'after:package:finalize': () => {
@@ -97,6 +96,10 @@ export class ServerlessApigator {
     this.entrypoint = serverless.service.custom.entrypoint;
     debug('entrypoint', this.entrypoint);
 
+  }
+
+  public async copyPackages() {
+    await fs.copy(this.serverless.service.custom.npmModulePath + '/.serverless', this.servicePath + '/.serverless');
   }
 
   public async configureFunctions(forDeployment = false) {

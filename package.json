@@ -54,6 +54,7 @@
   },
   "dependencies": {
     "@microgamma/ts-debug": "0.3.x",
+    "fs-extra": "^7.0.1",
     "reflect-metadata": "^0.1.12"
   },
   "devDependencies": {
