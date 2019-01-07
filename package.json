@@ -1,6 +1,6 @@
 {
   "name": "@microgamma/serverless-apigator",
-  "version": "1.4.22",
+  "version": "1.4.24",
   "description": "a typescript-starter project",
   "main": "build/main/index.js",
   "typings": "build/main/index.d.ts",
