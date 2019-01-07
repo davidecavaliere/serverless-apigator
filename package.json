@@ -1,6 +1,6 @@
 {
   "name": "@microgamma/serverless-apigator",
-  "version": "1.4.24",
+  "version": "1.4.26",
   "description": "a typescript-starter project",
   "main": "build/main/index.js",
   "typings": "build/main/index.d.ts",
@@ -58,8 +58,8 @@
   },
   "devDependencies": {
     "@microgamma/apigator": "1.9.x",
-    "@types/sinon": "^5.0.1",
     "@types/node": "^10.12.18",
+    "@types/sinon": "^5.0.1",
     "ava": "^1.0.0-beta.5.1",
     "codecov": "^3.0.2",
     "cz-conventional-changelog": "^2.1.0",
