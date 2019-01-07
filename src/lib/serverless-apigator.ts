@@ -34,6 +34,15 @@ export class ServerlessApigator {
     'before:info:info': () => {
       debug('offline:init');
       return this.configureFunctions();
+    },
+
+    'before:package:createDeploymentArtifacts': () => {
+      debug('this runs before packaging');
+      this.serverless.config.servicePath = this.options.npmModulePath;
+    },
+    'after:package:createDeploymentArtifacts': () => {
+      debug('this runs after packaging');
+      this.serverless.config.servicePath = this.servicePath;
     }
   };
 
