@@ -45,6 +45,7 @@ export class ServerlessApigator {
       debug('this runs after packaging');
       this.serverless.config.servicePath = this.servicePath;
       debug('servicePath set to', this.serverless.config.servicePath);
+      debug('package path', this.serverless.service.package.path);
 
     },
 
