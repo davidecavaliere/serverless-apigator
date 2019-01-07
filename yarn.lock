@@ -371,15 +371,16 @@
   dependencies:
     arrify "^1.0.1"
 
-"@microgamma/apigator@^1.9.11":
-  version "1.9.11"
-  resolved "https://registry.yarnpkg.com/@microgamma/apigator/-/apigator-1.9.11.tgz#399faf3a889fe4d47c5646476ce2e083ed5a56bd"
+"@microgamma/apigator@1.9.x":
+  version "1.9.19"
+  resolved "https://registry.yarnpkg.com/@microgamma/apigator/-/apigator-1.9.19.tgz#1947c71229ff9c4300e591b5c5aac58c72f828ab"
   dependencies:
     "@microgamma/ts-debug" "^0.3.1"
     "@types/aws-lambda" "^8.10.11"
     reflect-metadata "^0.1.12"
+    rxjs "^6.3.3"
 
-"@microgamma/ts-debug@^0.3.1":
+"@microgamma/ts-debug@0.3.x", "@microgamma/ts-debug@^0.3.1":
   version "0.3.1"
   resolved "https://registry.yarnpkg.com/@microgamma/ts-debug/-/ts-debug-0.3.1.tgz#b0334aee4feaad1c76503310573f3ad9275a46b6"
   dependencies:
@@ -478,6 +479,10 @@
 "@types/node@*":
   version "10.7.1"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-10.7.1.tgz#b704d7c259aa40ee052eec678758a68d07132a2e"
+
+"@types/node@^10.12.18":
+  version "10.12.18"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.12.18.tgz#1d3ca764718915584fcd9f6344621b7672665c67"
 
 "@types/shelljs@0.7.8":
   version "0.7.8"
@@ -4793,6 +4798,12 @@ rx@^4.1.0:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/rx/-/rx-4.1.0.tgz#a5f13ff79ef3b740fe30aa803fb09f98805d4782"
 
+rxjs@^6.3.3:
+  version "6.3.3"
+  resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-6.3.3.tgz#3c6a7fa420e844a81390fb1158a9ec614f4bad55"
+  dependencies:
+    tslib "^1.9.0"
+
 safe-buffer@5.1.1:
   version "5.1.1"
   resolved "https://registry.yarnpkg.com/safe-buffer/-/safe-buffer-5.1.1.tgz#893312af69b2123def71f57889001671eeb2c853"
@@ -5538,7 +5549,7 @@ trim-right@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/trim-right/-/trim-right-1.0.1.tgz#cb2e1203067e0c8de1f614094b9fe45704ea6003"
 
-tslib@^1.8.0, tslib@^1.8.1:
+tslib@^1.8.0, tslib@^1.8.1, tslib@^1.9.0:
   version "1.9.3"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.9.3.tgz#d7e4dd79245d85428c4d7e4822a79917954ca286"
 

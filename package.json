@@ -59,6 +59,7 @@
   "devDependencies": {
     "@microgamma/apigator": "1.9.x",
     "@types/sinon": "^5.0.1",
+    "@types/node": "^10.12.18",
     "ava": "^1.0.0-beta.5.1",
     "codecov": "^3.0.2",
     "cz-conventional-changelog": "^2.1.0",
